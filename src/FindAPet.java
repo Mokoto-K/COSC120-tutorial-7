@@ -1,8 +1,4 @@
-/**
- * @author Dr Andreas Shepley (asheple2@une.edu.au | andreashepley01@gmail.com)
- * created for COSC120 (Trimester 1 2022)
- * last revised: Trimester 1 2024
- */
+
 
 import javax.swing.*;
 import java.io.IOException;
@@ -111,67 +107,6 @@ public class FindAPet {
     }
 
     /**
-     * method to get user to input name, ph num and email, with appropriate input validation
-     * @return a Person object representing the user of the program
-     */
-    private static Person getUserDetails(){
-        String name;
-        do {
-            name = JOptionPane.showInputDialog(null, "Please enter your full name.", appName, JOptionPane.QUESTION_MESSAGE);
-            if(name==null) System.exit(0);
-        } while(!isValidFullName(name));
-
-        String phoneNumber;
-        do{
-            phoneNumber = JOptionPane.showInputDialog("Please enter your phone number (10-digit number in the format 0412345678): ");
-            if(phoneNumber==null) System.exit(0);}
-        while(!isValidPhoneNumber(phoneNumber));
-
-        String email;
-        do {
-            email = JOptionPane.showInputDialog(null, "Please enter your email address.", appName, JOptionPane.QUESTION_MESSAGE);
-            if (email == null) System.exit(0);
-        }while(!isValidEmail(email));
-
-        return new Person(name, phoneNumber, email);
-    }
-
-    /**
-     * a very simple regex for full name in Firstname Surname format
-     * @param fullName the candidate full name entered by the user
-     * @return true if name matches regex/false if not
-     */
-    public static boolean isValidFullName(String fullName) {
-        String regex = "^[A-Z][a-z]+\\s[A-Z][a-zA-Z]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(fullName);
-        return matcher.matches();
-    }
-
-    /**
-     * a regex matcher that ensures that the user's entry starts with a 0 and is followed by 9 digits
-     * @param phoneNumber the candidate phone number entered by the user
-     * @return true if phone number matches regex/false if not
-     */
-    public static boolean isValidPhoneNumber(String phoneNumber) {
-        Pattern pattern = Pattern.compile("^0\\d{9}$");
-        Matcher matcher = pattern.matcher(phoneNumber);
-        return matcher.matches();
-    }
-
-    /**
-     * a regex matcher that ensures that the user's entry complies with RFC 5322
-     * source: <a href="https://www.baeldung.com/java-email-validation-regex">...</a>
-     * @param email the candidate email entered by the user
-     * @return true if email matches regex/false if not
-     */
-    public static boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    /**
      * generates JOptionPanes requesting user input for Pet breed, sex, de-sexed status and age
      * @param type a String representing the user's selection of Dog or Cat
      * @return a DreamPet object representing the user's desired Pet criteria
@@ -245,6 +180,32 @@ public class FindAPet {
     }
 
     /**
+     * method to get user to input name, ph num and email, with appropriate input validation
+     * @return a Person object representing the user of the program
+     */
+    private static Person getUserDetails(){
+        String name;
+        do {
+            name = JOptionPane.showInputDialog(null, "Please enter your full name.", appName, JOptionPane.QUESTION_MESSAGE);
+            if(name==null) System.exit(0);
+        } while(!isValidFullName(name));
+
+        String phoneNumber;
+        do{
+            phoneNumber = JOptionPane.showInputDialog("Please enter your phone number (10-digit number in the format 0412345678): ");
+            if(phoneNumber==null) System.exit(0);}
+        while(!isValidPhoneNumber(phoneNumber));
+
+        String email;
+        do {
+            email = JOptionPane.showInputDialog(null, "Please enter your email address.", appName, JOptionPane.QUESTION_MESSAGE);
+            if (email == null) System.exit(0);
+        }while(!isValidEmail(email));
+
+        return new Person(name, phoneNumber, email);
+    }
+
+    /**
      * provides Pinkman's Pets with a file containing the user's adoption request
      * @param person a Person object representing the user
      * @param Pet a Pet object representing the Pet that the user wants to adopt
@@ -260,5 +221,40 @@ public class FindAPet {
             System.out.println("File could not be written. \nError message: "+io.getMessage());
             System.exit(0);
         }
+    }
+
+    /**
+     * a very simple regex for full name in Firstname Surname format
+     * @param fullName the candidate full name entered by the user
+     * @return true if name matches regex/false if not
+     */
+    public static boolean isValidFullName(String fullName) {
+        String regex = "^[A-Z][a-z]+\\s[A-Z][a-zA-Z]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(fullName);
+        return matcher.matches();
+    }
+
+    /**
+     * a regex matcher that ensures that the user's entry starts with a 0 and is followed by 9 digits
+     * @param phoneNumber the candidate phone number entered by the user
+     * @return true if phone number matches regex/false if not
+     */
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        Pattern pattern = Pattern.compile("^0\\d{9}$");
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
+    /**
+     * a regex matcher that ensures that the user's entry complies with RFC 5322
+     * source: <a href="https://www.baeldung.com/java-email-validation-regex">...</a>
+     * @param email the candidate email entered by the user
+     * @return true if email matches regex/false if not
+     */
+    public static boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
