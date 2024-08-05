@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,7 @@ public class FindAPet {
     private static AllPets loadPets() {
         AllPets allPets = new AllPets();
         Path path = Path.of(filePath);
+        Map<Criteria, Object> criteraMap = new HashMap<>();
 
         List<String> PetData = null;
         try{
@@ -52,7 +54,13 @@ public class FindAPet {
 
         for (int i=1;i<PetData.size();i++) {
             String[] elements = PetData.get(i).split(",");
-            String type = elements[0].toLowerCase();
+
+            String type = elements[0].toUpperCase();
+            try {
+                type = TypeOfPet.valueOf(type).toString();
+            } catch (Exception e) {
+                System.out.println("Guinea pig problems" + e);
+            }
 
             String name = elements[1];
             long microchipNumber = 0;
@@ -84,22 +92,31 @@ public class FindAPet {
                 System.out.println("Error in file. Adoption fee could not be parsed for Pet on line "+(i+1)+". Terminating. \nError message: "+n.getMessage());
                 System.exit(0);
             }
+            String Hair = elements[9].toUpperCase();
+            String training = elements[10].toUpperCase();
+            int exercise = Integer.parseInt(elements[11]);
+//            DreamPet dreamPet=null;
+//            if(type.equals("cat")) {
+//                Hair hair;
+//                if(elements[9].equalsIgnoreCase("yes"))
+//                    hair = Hair.HAIRLESS;
+//                else hair=Hair.NA;
+//                dreamPet = new DreamCat(breed,sex,deSexed,purebred,hair);
+//            }
+//            else if(type.equals("dog")){
+//                LevelOfTraining levelOfTraining = LevelOfTraining.valueOf(elements[10]); //add exception handling here
+//                int amountOfExercise = Integer.parseInt(elements[11]);
+//                dreamPet = new DreamDog(breed, sex, deSexed, purebred, levelOfTraining, amountOfExercise);
+//            }
+            criteraMap.put(Criteria.TYPE, type);
+            criteraMap.put(Criteria.BREED, breed);
+            criteraMap.put(Criteria.SEX, sex);
+            criteraMap.put(Criteria.DESEXED, deSexed);
+            criteraMap.put(Criteria.PUREBREED, purebred);
+            criteraMap.put(Criteria.HAIR, Hair);
 
-            DreamPet dreamPet=null;
-            if(type.equals("cat")) {
-                Hair hair;
-                if(elements[9].equalsIgnoreCase("yes"))
-                    hair = Hair.HAIRLESS;
-                else hair=Hair.NA;
-                dreamPet = new DreamCat(breed,sex,deSexed,purebred,hair);
-            }
-            else if(type.equals("dog")){
-                LevelOfTraining levelOfTraining = LevelOfTraining.valueOf(elements[10]); //add exception handling here
-                int amountOfExercise = Integer.parseInt(elements[11]);
-                dreamPet = new DreamDog(breed, sex, deSexed, purebred, levelOfTraining, amountOfExercise);
-            }
-
-            Pet Pet = new Pet(name, microchipNumber,age, adoptionFee,dreamPet);
+            DreamPet dreamPet = new DreamPet(criteraMap);
+            Pet Pet = new Pet(name, microchipNumber,age, adoptionFee, dreamPet);
 
             allPets.addPet(Pet);
         }

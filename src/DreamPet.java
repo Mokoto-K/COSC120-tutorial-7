@@ -1,68 +1,39 @@
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DreamPet {
 
-    private final String breed;
-    private final Sex sex;
-    private final DeSexed deSexed;
-    private final Purebred purebred;
-    private int minAge;
-    private int maxAge;
+    private final int minAge;
+    private final int maxAge;
+    private final Map<Criteria, Object> criteria;
 
     /**
      *
-     * @param breed String representing the Pet's breed
-     * @param sex String (male or female)
-     * @param deSexed String (yes - de-sexed or no - not de-sexed)
-     * @param purebred Enum Purebred representing yes/no/na
      * @param minAge lowest age user would be willing to adopt
      * @param maxAge highest age user would be willing to adopt
      */
-    public DreamPet(String breed, Sex sex, DeSexed deSexed, Purebred purebred, int minAge, int maxAge) {
-        this.breed = breed;
-        this.sex = sex;
-        this.deSexed = deSexed;
-        this.purebred=purebred;
+    public DreamPet(Map<Criteria, Object> criteria, int minAge, int maxAge) {
+        if (criteria==null) this.criteria=new LinkedHashMap<>();
+        else this.criteria = new LinkedHashMap<>(criteria);
         this.minAge = minAge;
         this.maxAge = maxAge;
     }
 
     /**
      *
-     * @param breed String representing the Pet's breed
-     * @param sex String (male or female)
-     * @param deSexed String (yes - de-sexed or no - not de-sexed)
-     * @param purebred Enum Purebred representing yes/no/na
+     * @param
      */
-    public DreamPet(String breed, Sex sex, DeSexed deSexed, Purebred purebred) {
-        this.breed = breed;
-        this.sex = sex;
-        this.deSexed = deSexed;
-        this.purebred=purebred;
+    public DreamPet(Map<Criteria, Object> criteria) {
+        if (criteria==null) this.criteria=new LinkedHashMap<>();
+        else this.criteria = new LinkedHashMap<>(criteria);
     }
 
-    /**
-     * @return the Pet's breed
-     */
-    public String getBreed() {
-        return breed;
+    public Map<Criteria, Object> getAllCriteria() {
+        return new HashMap<>(criteria);
     }
 
-    /**
-     * @return the Pet's sex (male or female)
-     */
-    public Sex getSex() { return sex;}
-
-    /**
-     * @return the Pet's de-sexed status
-     */
-    public DeSexed isDeSexed() { return deSexed; }
-
-    /**
-     * @return Purebred constant yes (purebred), no(not purebred) or NA
-     */
-    public Purebred getPurebred() {
-        return purebred;
-    }
+    public Object getCriteria(Criteria key) {return getAllCriteria().get(key); }
 
     /**
      * @return a 'dream' Pet's min age
@@ -80,9 +51,12 @@ public class DreamPet {
     /**
      * @return a formatted description of generic DreamPet features
      */
-    public String getDreamPetDescription(){
-        if(this.purebred.equals(Purebred.YES)) return this.getSex()+ " purebred " +this.getBreed()+".\n > De-sexed: "+this.isDeSexed();
-        return this.getSex()+ " " +this.getBreed()+".\n > De-sexed: "+this.isDeSexed();
+    public String getDreamPetDescription(Map<Criteria, Object> criteria){
+        StringBuilder description = new StringBuilder();
+        for (Criteria key : criteria.keySet()) {
+            description.append("\n").append(key).append(": ").append(getCriteria(key));
+        }
+        return description.toString();
     }
 
     /**

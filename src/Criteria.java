@@ -1,8 +1,9 @@
 public enum Criteria {
-    BREED, SEX, DESEXED, PUREBREED, HAIR;
+    TYPE, BREED, SEX, DESEXED, PUREBREED, HAIR;
 
     public String toString() {
         return switch (this) {
+            case TYPE -> "Type of pet";
             case BREED -> "Breed of animal";
             case SEX -> "Sex of animal";
             case DESEXED -> "DeSexed status";
