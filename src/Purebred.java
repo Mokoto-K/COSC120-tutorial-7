@@ -6,7 +6,7 @@ public enum Purebred {
         return switch (this) {
             case YES -> "Yes";
             case NO -> "No";
-            case NA -> "Not applicable";
+            case NA -> "Na";
         };
     }
 }

@@ -8,7 +8,7 @@ public enum Hair {
             case HAIRLESS -> "Hairless";
             case SHORT -> "Short";
             case LONG -> "Long";
-            default -> "Not Applicable";
+            default -> "NA";
         };
     }
 

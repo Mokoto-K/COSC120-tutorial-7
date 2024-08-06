@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DreamPet {
 
@@ -65,11 +63,18 @@ public class DreamPet {
      * @return true if matches, false if not
      */
     public boolean compareDreamPets(DreamPet petCriteria) {
-        if (!petCriteria.getBreed().equals("NA") && !this.getBreed().equals(petCriteria.getBreed())) return false;
-        if (!this.getSex().equals(petCriteria.getSex())) return false;
-        if (!this.isDeSexed().equals(petCriteria.isDeSexed())) return false;
-        if (petCriteria.getPurebred().equals(Purebred.YES) || petCriteria.getPurebred().equals(Purebred.NO)){
-            return this.getPurebred().equals(petCriteria.getPurebred());
+        for (Criteria key : petCriteria.getAllCriteria().keySet()) {
+             if (this.getAllCriteria().containsKey(key)) {
+                 if (getCriteria(key) instanceof Collection<?> && petCriteria.getCriteria(key) instanceof Collection<?>) {
+                     Set<Object> intersect = new HashSet<>((Collection<?>) petCriteria.getCriteria(key));
+                     intersect.retainAll((Collection<?>) petCriteria.getCriteria(key));
+                     if (intersect.isEmpty()) return false;
+                 }
+                 else if (petCriteria.getCriteria(key) instanceof Collection<?> && !(getCriteria(key) instanceof Collection<?>)) {
+                     if (!((Collection<?>) petCriteria.getCriteria(key)).contains(getCriteria(key))) return false;
+                 }
+                 else if (!getCriteria(key).equals(petCriteria.getCriteria(key))) return false;
+             }
         }
         return true;
     }

@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 //import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,44 +125,90 @@ public class FindAPet {
      * @param type a String representing the user's selection of Dog or Cat
      * @return a DreamPet object representing the user's desired Pet criteria
      */
-    private static DreamPet getUserCriteria(String type){
+    private static DreamPet getUserCriteria(){
+        Map<Criteria, Object> usersDreamPet = new LinkedHashMap<>();
+
+        String type = (String) JOptionPane.showInputDialog(null,"Please select the type of pet you'd like to adopt.",appName, JOptionPane.QUESTION_MESSAGE,icon,TypeOfPet.values(), TypeOfPet.DOG);
+        if(type==null) System.exit(0);
+        usersDreamPet.put(Criteria.TYPE, type);
+
         String breed  = (String) JOptionPane.showInputDialog(null,"Please select your preferred breed.",appName, JOptionPane.QUESTION_MESSAGE,icon,allPets.getAllBreeds(type).toArray(), "");
         if(breed==null) System.exit(0);
+        else if (!breed.equalsIgnoreCase("na")) {
+            usersDreamPet.put(Criteria.BREED, breed);
+        }
 
         Sex sex = (Sex) JOptionPane.showInputDialog(null,"Please select your preferred sex:",appName, JOptionPane.QUESTION_MESSAGE,icon,Sex.values(),Sex.FEMALE);
         if(sex==null) System.exit(0);
+        usersDreamPet.put(Criteria.SEX, sex);
+
         DeSexed deSexed = (DeSexed) JOptionPane.showInputDialog(null,"Would you like your Pet to be de-sexed or not?",appName, JOptionPane.QUESTION_MESSAGE,icon,DeSexed.values(),DeSexed.YES);
         if(deSexed==null) System.exit(0);
+        usersDreamPet.put(Criteria.DESEXED, deSexed);
+
         Purebred purebred  = (Purebred) JOptionPane.showInputDialog(null,"Would you like the Pet to be a purebred?",appName, JOptionPane.QUESTION_MESSAGE,null,Purebred.values(), "");
         if(purebred==null) System.exit(0);
+        else if (!(purebred==Purebred.NA)) {
+            usersDreamPet.put(Criteria.PUREBREED, purebred);
+        }
+
+//        int minAge = -1, maxAge = -1;
+//        while(minAge==-1) {
+//            try {
+//                minAge = Integer.parseInt(JOptionPane.showInputDialog(null,"What is the age (years) of the youngest Pet you'd like to adopt ",appName,JOptionPane.QUESTION_MESSAGE));
+//            }
+//            catch (NumberFormatException e){
+//                JOptionPane.showMessageDialog(null,"Invalid input. Please try again.");
+//            }
+//        }
+//        while(maxAge<minAge) {
+//            try {
+//                maxAge = Integer.parseInt(JOptionPane.showInputDialog(null,"What is the age (years) of the oldest Pet you'd be willing to adopt ",appName,JOptionPane.QUESTION_MESSAGE));
+//            }
+//            catch (NumberFormatException e){
+//                JOptionPane.showMessageDialog(null,"Invalid input. Please try again.");
+//            }
+//            if(maxAge<minAge) JOptionPane.showMessageDialog(null,"Max age must be >= min age.");
+//        }
+
+
+        if(type.equalsIgnoreCase("Cat")) {
+            Hair hair  = (Hair) JOptionPane.showInputDialog(null,"Please select from the following options","Pinkman's Pet Finder", JOptionPane.QUESTION_MESSAGE,null,Hair.values(), "");
+            if(hair==null) System.exit(0);
+            else if (!(hair==Hair.NA)) {
+                usersDreamPet.put(Criteria.HAIR, hair);
+            }
+        }
+
+        int[] age = minMaxValues("min age ", "max age ");
+        int[] price = minMaxValues("min price ", "max price");
+
+        return new DreamPet(usersDreamPet, age[0], age[1]);
+    }
+
+    private static int[] minMaxValues(String lowest, String highest) {
+
         int minAge = -1, maxAge = -1;
         while(minAge==-1) {
             try {
-                minAge = Integer.parseInt(JOptionPane.showInputDialog(null,"What is the age (years) of the youngest Pet you'd like to adopt ",appName,JOptionPane.QUESTION_MESSAGE));
+                minAge = Integer.parseInt(JOptionPane.showInputDialog(null,"What is the " + lowest ,appName,JOptionPane.QUESTION_MESSAGE));
             }
             catch (NumberFormatException e){
                 JOptionPane.showMessageDialog(null,"Invalid input. Please try again.");
             }
         }
+
         while(maxAge<minAge) {
             try {
-                maxAge = Integer.parseInt(JOptionPane.showInputDialog(null,"What is the age (years) of the oldest Pet you'd be willing to adopt ",appName,JOptionPane.QUESTION_MESSAGE));
+                maxAge = Integer.parseInt(JOptionPane.showInputDialog(null,"What is the " + highest ,appName,JOptionPane.QUESTION_MESSAGE));
             }
             catch (NumberFormatException e){
                 JOptionPane.showMessageDialog(null,"Invalid input. Please try again.");
             }
             if(maxAge<minAge) JOptionPane.showMessageDialog(null,"Max age must be >= min age.");
         }
-
-        DreamPet dreamPet=null;
-        if(type.equals("Cat")) {
-            Hair hair  = (Hair) JOptionPane.showInputDialog(null,"Please select from the following options","Pinkman's Pet Finder", JOptionPane.QUESTION_MESSAGE,null,Hair.values(), "");
-            if(hair==null) System.exit(0);
-            dreamPet = new DreamCat(breed,sex,deSexed,purebred,minAge,maxAge,hair);
-        }
-        else if(type.equals("Dog")) dreamPet = new DreamDog(breed,sex,deSexed,purebred,minAge,maxAge);
-
-        return dreamPet;
+        int[] values = new int[]{minAge,maxAge};
+        return values;
     }
 
     /**
