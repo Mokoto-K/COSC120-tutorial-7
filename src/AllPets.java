@@ -23,8 +23,10 @@ public class AllPets {
     public Set<String> getAllBreeds(String type){
         Set<String> allBreeds = new HashSet<>();
         for(Pet p: allPets){
-            if(type.equals("Cat") && p.dreamPet() instanceof DreamCat) allBreeds.add(p.dreamPet().getBreed());
-            else if(type.equals("Dog") && p.dreamPet() instanceof DreamDog) allBreeds.add(p.dreamPet().getBreed());
+            System.out.println(p.dreamPet().getCriteria(Criteria.TYPE));
+            if(p.dreamPet().getCriteria(Criteria.TYPE).equals(type)) {
+                allBreeds.add(p.dreamPet().getCriteria(Criteria.BREED).toString());
+            }
         }
         allBreeds.add("NA");
         return allBreeds;

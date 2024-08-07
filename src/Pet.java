@@ -1,5 +1,6 @@
 
 import java.text.DecimalFormat;
+import java.util.Map;
 
 /**
  * @param name            the Pet's name
@@ -10,10 +11,10 @@ import java.text.DecimalFormat;
  */
 public record Pet(String name, long microchipNumber, int age, double adoptionFee, DreamPet dreamPet) {
 
-    @Override
-    public String toString() {
+
+    public String toString(Map<Criteria, Object> criteria) {
         DecimalFormat df = new DecimalFormat("0.00");
         return this.name() + " (" + this.microchipNumber() + ") is a " + this.age() + " year old " +
-                this.dreamPet().getDreamPetDescription() + ".\n > Adoption fee: $" + df.format(this.adoptionFee()) + "\n";
+                this.dreamPet().getDreamPetDescription(criteria) + ".\n > Adoption fee: $" + df.format(this.adoptionFee()) + "\n";
     }
 }

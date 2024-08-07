@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class FindAPet {
 
     private final static String appName = "Pinkman's Pets Pet Finder";
-    private final static String filePath = "./allPets.txt";
+    private final static String filePath = "./allPets2.txt";
     private final static String iconPath = "./icon.jpg";
     private static final ImageIcon icon = new ImageIcon(iconPath);
     private static AllPets allPets;
@@ -24,9 +24,7 @@ public class FindAPet {
     public static void main(String[] args) {
         allPets = loadPets();
         JOptionPane.showMessageDialog(null, "Welcome to Pinkman's Pets Pet Finder!\n\tTo start, click OK.", appName, JOptionPane.QUESTION_MESSAGE, icon);
-        String type = (String) JOptionPane.showInputDialog(null,"Please select the type of pet you'd like to adopt.",appName, JOptionPane.QUESTION_MESSAGE,icon,new String[]{"Dog", "Cat"}, "");
-        if(type==null) System.exit(0);
-        DreamPet petCriteria = getUserCriteria(type);
+        DreamPet petCriteria = getUserCriteria();
         processSearchResults(petCriteria);
 
         System.exit(0);
@@ -91,7 +89,7 @@ public class FindAPet {
             }
             String Hair = elements[9].toUpperCase();
             String training = elements[10].toUpperCase();
-            int exercise = Integer.parseInt(elements[11]);
+//            int exercise = Integer.parseInt(elements[11]);
 //            DreamPet dreamPet=null;
 //            if(type.equals("cat")) {
 //                Hair hair;
@@ -116,23 +114,26 @@ public class FindAPet {
             Pet Pet = new Pet(name, microchipNumber,age, adoptionFee, dreamPet);
 
             allPets.addPet(Pet);
+            for (Criteria key :criteraMap.keySet()) {
+                System.out.println(key.toString() + criteraMap.values());
+            }
         }
         return allPets;
     }
 
     /**
      * generates JOptionPanes requesting user input for Pet breed, sex, de-sexed status and age
-     * @param type a String representing the user's selection of Dog or Cat
      * @return a DreamPet object representing the user's desired Pet criteria
      */
     private static DreamPet getUserCriteria(){
         Map<Criteria, Object> usersDreamPet = new LinkedHashMap<>();
 
-        String type = (String) JOptionPane.showInputDialog(null,"Please select the type of pet you'd like to adopt.",appName, JOptionPane.QUESTION_MESSAGE,icon,TypeOfPet.values(), TypeOfPet.DOG);
+        TypeOfPet type = (TypeOfPet) JOptionPane.showInputDialog(null,"Please select the type of pet you'd like to adopt.",appName, JOptionPane.QUESTION_MESSAGE,icon,TypeOfPet.values(), TypeOfPet.DOG);
         if(type==null) System.exit(0);
         usersDreamPet.put(Criteria.TYPE, type);
 
-        String breed  = (String) JOptionPane.showInputDialog(null,"Please select your preferred breed.",appName, JOptionPane.QUESTION_MESSAGE,icon,allPets.getAllBreeds(type).toArray(), "");
+        String breed  = (String) JOptionPane.showInputDialog(null,"Please select your preferred" +
+                " breed.",appName, JOptionPane.QUESTION_MESSAGE,icon,allPets.getAllBreeds(type.toString()).toArray(), "");
         if(breed==null) System.exit(0);
         else if (!breed.equalsIgnoreCase("na")) {
             usersDreamPet.put(Criteria.BREED, breed);
@@ -172,7 +173,7 @@ public class FindAPet {
 //        }
 
 
-        if(type.equalsIgnoreCase("Cat")) {
+        if(type.toString().equalsIgnoreCase("Cat")) {
             Hair hair  = (Hair) JOptionPane.showInputDialog(null,"Please select from the following options","Pinkman's Pet Finder", JOptionPane.QUESTION_MESSAGE,null,Hair.values(), "");
             if(hair==null) System.exit(0);
             else if (!(hair==Hair.NA)) {
@@ -181,7 +182,7 @@ public class FindAPet {
         }
 
         int[] age = minMaxValues("min age ", "max age ");
-        int[] price = minMaxValues("min price ", "max price");
+//        int[] price = minMaxValues("min price ", "max price");
 
         return new DreamPet(usersDreamPet, age[0], age[1]);
     }
@@ -222,6 +223,7 @@ public class FindAPet {
             Map<String,Pet> options = new HashMap<>();
             StringBuilder infoToShow = new StringBuilder("Matches found!! The following Pets meet your criteria: \n");
             for (Pet potentialMatch : potentialMatches) {
+                // TODO - I might have to pass the map into the to string here? not sure how?
                 infoToShow.append("\n").append(potentialMatch.toString());
                 options.put(potentialMatch.name() + " (" + potentialMatch.microchipNumber() + ")", potentialMatch);
             }

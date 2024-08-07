@@ -25,6 +25,9 @@ public class DreamPet {
     public DreamPet(Map<Criteria, Object> criteria) {
         if (criteria==null) this.criteria=new LinkedHashMap<>();
         else this.criteria = new LinkedHashMap<>(criteria);
+
+        minAge = -1;
+        maxAge = -1;
     }
 
     public Map<Criteria, Object> getAllCriteria() {
@@ -73,7 +76,10 @@ public class DreamPet {
                  else if (petCriteria.getCriteria(key) instanceof Collection<?> && !(getCriteria(key) instanceof Collection<?>)) {
                      if (!((Collection<?>) petCriteria.getCriteria(key)).contains(getCriteria(key))) return false;
                  }
-                 else if (!getCriteria(key).equals(petCriteria.getCriteria(key))) return false;
+                 else if (!getCriteria(key).equals(petCriteria.getCriteria(key).toString())) {
+                     System.out.println("5");
+                     return false;
+                 }
              }
         }
         return true;
