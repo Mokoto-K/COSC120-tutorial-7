@@ -12,8 +12,7 @@ public class DreamPet {
      * @param maxAge highest age user would be willing to adopt
      */
     public DreamPet(Map<Criteria, Object> criteria, int minAge, int maxAge) {
-        if (criteria==null) this.criteria=new LinkedHashMap<>();
-        else this.criteria = new LinkedHashMap<>(criteria);
+        this.criteria = new HashMap<>(criteria);
         this.minAge = minAge;
         this.maxAge = maxAge;
     }
@@ -23,8 +22,8 @@ public class DreamPet {
      * @param
      */
     public DreamPet(Map<Criteria, Object> criteria) {
-        if (criteria==null) this.criteria=new LinkedHashMap<>();
-        else this.criteria = new LinkedHashMap<>(criteria);
+//        if (criteria==null) this.criteria=new LinkedHashMap<>();
+        this.criteria = new HashMap<>(criteria);
 
         minAge = -1;
         maxAge = -1;
